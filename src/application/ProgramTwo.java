@@ -6,7 +6,7 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class Program {
+public class ProgramTwo {
    public static void main(String[] args) {
       DB db = new DB();
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -20,9 +20,10 @@ public class Program {
 
          statement = connection.prepareStatement(
                  "INSERT INTO seller "
-                 + "(Name, Email, BirthDate, BaseSalary, DepartmentId) "
-                 + "VALUES "
-                 + "(?, ?, ?, ?, ?)");
+                         + "(Name, Email, BirthDate, BaseSalary, DepartmentId) "
+                         + "VALUES "
+                         + "(?, ?, ?, ?, ?)",
+                 Statement.RETURN_GENERATED_KEYS);
          statement.setString(1, "Carl Purple");
          statement.setString(2, "carl@gmail.com");
          statement.setDate(3, sqlDate);
@@ -30,7 +31,16 @@ public class Program {
          statement.setInt(5, 4);
          int rowsAffected = statement.executeUpdate();
 
-         System.out.println("Done! Rows affected: " + rowsAffected);
+         if(rowsAffected > 0) {
+           ResultSet rs = statement.getGeneratedKeys();
+
+           while (rs.next()) {
+              int id = rs.getInt(1);
+              System.out.println("Done! Id= " + id);
+           }
+         } else {
+            System.out.println("No row affected!");
+         }
 
       } catch (SQLException e) {
          e.printStackTrace();

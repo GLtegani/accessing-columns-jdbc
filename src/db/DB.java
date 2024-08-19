@@ -7,6 +7,10 @@ import java.sql.*;
 import java.util.Properties;
 
 public class DB {
+
+   public DB() {
+   }
+
    private Connection connection = null;
 
    private Properties loadProperties() {
